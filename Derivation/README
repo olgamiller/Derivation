@@ -20,29 +20,28 @@ Input string is not case-sensitive.
 
 
 Input String Example:
---------------------
+
 -x + y * exp(1.0002345 + z) ^ t - .6 + 2 + sqrt(cos(2 * pi) - sin(x)) + cos(y) + ln(e^x)
 
 
 Usage:
------
+
 //Parsing:
-	FunctionTree function; 
-	FunctionParser parser = new FunctionParser();
-	try	{
-		function = parser.Parse(input);
-	} catch (SyntaxException ex) {}
+FunctionTree function; 
+FunctionParser parser = new FunctionParser();
+try { function = parser.Parse(input); }
+catch (SyntaxException ex) {}
 
 //Printing:
-	Node root = function.Expression;
-	string tree = root.ToString();
+Node root = function.Expression;
+string tree = root.ToString();
 
 //Evaluation:	
-	PointMath math = new PointMath();	
-	double value = root.Apply(math, x, y, z, t)));
+PointMath math = new PointMath();	
+double value = root.Apply(math, x, y, z, t);
 
 //Derivation:
-	Node dfdx = root.Derive(function.Parameters.X);
-    Node dfdy = root.Derive(function.Parameters.Y);
-    Node dfdz = root.Derive(function.Parameters.Z);
-    Node dfdt = root.Derive(function.Parameters.T);
+Node dfdx = root.Derive(function.Parameters.X);
+Node dfdy = root.Derive(function.Parameters.Y);
+Node dfdz = root.Derive(function.Parameters.Z);
+Node dfdt = root.Derive(function.Parameters.T);
