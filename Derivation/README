@@ -1,0 +1,48 @@
+﻿Derivation - Parsing and derivation of mathematical function entered as a string
+  
+Written in 2015 by <Olga Miller> <olga.rgb@googlemail.com>
+To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide.
+This software is distributed without any warranty.
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+
+The following tokens are supported:
+	Variables: x, y, z, t
+	Operators: +, -, *, /, ^
+	Constants: pi, e
+	Functions: sin, cos, sqrt, ln, exp
+
+Double precision is used.
+Input string is not case-sensitive.
+
+"Derivation.CommonMath" namespace contains "PointMath" and "IntervalArithmetic" classes, which can be used to evaluate the parsed function.
+"IntervalArithmetic" can be useful to analyze problematic curves.
+
+
+Input String Example:
+--------------------
+-x + y * exp(1.0002345 + z) ^ t - .6 + 2 + sqrt(cos(2 * pi) - sin(x)) + cos(y) + ln(e^x)
+
+
+Usage:
+-----
+//Parsing:
+	FunctionTree function; 
+	FunctionParser parser = new FunctionParser();
+	try	{
+		function = parser.Parse(input);
+	} catch (SyntaxException ex) {}
+
+//Printing:
+	Node root = function.Expression;
+	string tree = root.ToString();
+
+//Evaluation:	
+	PointMath math = new PointMath();	
+	double value = root.Apply(math, x, y, z, t)));
+
+//Derivation:
+	Node dfdx = root.Derive(function.Parameters.X);
+    Node dfdy = root.Derive(function.Parameters.Y);
+    Node dfdz = root.Derive(function.Parameters.Z);
+    Node dfdt = root.Derive(function.Parameters.T);

@@ -1,0 +1,39 @@
+﻿Derivation Example - Console application for mathematical functions (entered as a string) and their derivations
+  
+Written in 2015 by <Olga Miller> <olga.rgb@googlemail.com>
+To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide.
+This software is distributed without any warranty.
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+This project demonstrates, how the "Derivation" library could be used.
+
+Console Input:
+	function[[, x[, y[, z[, t]]]]]
+
+Console Output:
+	Entered function
+	Calculated function result with entered values for x, y, z and t
+	Partial derivative with respect to x, y, z and t
+	Calculated derivation result with entered values for x, y, z and t
+
+To exit enter "exit" or "quit".
+
+Examples:
+	Console Input: 
+		> x^2 + y^2 + z^2 + t^2, 1, 2, 3, 4
+	Console Output:
+		f(x, y, z, t) = ((((x ^ 2) + (y ^ 2)) + (z ^ 2)) + (t ^ 2))
+		f(1, 2, 3, 4) = 30
+		grad f(x, y, z, t) = ((2 * x), (2 * y), (2 * z), (2 * t))
+		grad f(1, 2, 3, 4) = (2, 4, 6, 8)
+
+	Console Input: 
+		> sin(x^2), 3
+	Console Output:
+		f(x, y, z, t) = Sin((x ^ 2))
+		f(3, 0, 0, 0) = 0.412118485241757
+		grad f(x, y, z, t) = ((Cos((x ^ 2)) * (2 * x)), 0, 0, 0)
+		grad f(3, 0, 0, 0) = (-5.46678157130806, 0, 0, 0)
+
+If you see any "Internal parser error: ..." message please send me the function that triggered it.
+

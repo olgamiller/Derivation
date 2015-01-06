@@ -1,0 +1,23 @@
+﻿Derivation - Parsing and derivation of mathematical function entered as a string
+  
+Written in 2015 by <Olga Miller> <olga.rgb@googlemail.com>
+To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide.
+This software is distributed without any warranty.
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+
+The important project here is the "Derivation" class library.
+"Example" is a console application and demonstrates, how the "Derivation" library could be used.
+
+
+The following tokens are supported:
+	Variables: x, y, z, t
+	Operators: +, -, *, /, ^
+	Constants: pi, e
+	Functions: sin, cos, sqrt, ln, exp
+
+Double precision is used.
+Input string is not case-sensitive.
+
+
+For more information please read Derivation\README and Example\README.
