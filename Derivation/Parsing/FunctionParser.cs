@@ -52,15 +52,19 @@ namespace Derivation.Parsing
                         HandleNumber(ec);
                         break;
                     case 'x':
+                    case 'X':
                         SetExpression(ec, mParams.X);
                         break;
                     case 'y':
+                    case 'Y':
                         SetExpression(ec, mParams.Y);
                         break;
                     case 'z':
+                    case 'Z':
                         SetExpression(ec, mParams.Z);
                         break;
                     case 't':
+                    case 'T':
                         SetExpression(ec, mParams.T);
                         break;
                     case '+':
@@ -204,7 +208,7 @@ namespace Derivation.Parsing
 
         private bool ConsumeWord(string name)
         {
-            if ((mPos + name.Length) <= mInput.Length && mInput.Substring(mPos, name.Length) == name)
+            if ((mPos + name.Length) <= mInput.Length && mInput.Substring(mPos, name.Length).ToLower() == name)
             {
                 mPos += name.Length - 1;
                 return true;
