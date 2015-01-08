@@ -61,7 +61,7 @@ namespace Derivation.Nodes
 
         public override string ToString()
         {
-            return string.Format("-{0}", Node.ToString());
+            return string.Format("(-{0})", Node.ToString());
         }
     }
 
