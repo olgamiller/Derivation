@@ -54,6 +54,14 @@ namespace Derivation.Parsing
         }
     }
 
+    public class UnknownWordException : SyntaxException
+    {
+        public UnknownWordException(string input, int i)
+            : base(string.Format(Resources.UnknownWordError, input, GetArrow(i)))
+        {
+        }
+    }
+
     public class ParenthesisException : SyntaxException
     {
         public ParenthesisException(string input, int i, string missedParenthesis)

@@ -132,5 +132,16 @@ namespace Derivation.Properties {
                 return ResourceManager.GetString("UnknownTokenError", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}
+        ///{1}
+        ///Unknown word..
+        /// </summary>
+        internal static string UnknownWordError {
+            get {
+                return ResourceManager.GetString("UnknownWordError", resourceCulture);
+            }
+        }
     }
 }

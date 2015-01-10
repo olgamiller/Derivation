@@ -148,4 +148,9 @@ Syntax error.</value>
 {1}
 Unknown token "{2}".</value>
   </data>
+  <data name="UnknownWordError" xml:space="preserve">
+    <value>{0}
+{1}
+Unknown word.</value>
+  </data>
 </root>

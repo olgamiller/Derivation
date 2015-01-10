@@ -98,7 +98,7 @@ namespace Derivation.Parsing
                             SetExpression(ec, Node.Cos(Parse(true)));
                         }
                         else
-                            throw new SyntaxException(mInput, mPos);
+                            throw new UnknownWordException(mInput, mPos);
                         break;
                     case 'e':
                     case 'E':
@@ -118,14 +118,14 @@ namespace Derivation.Parsing
                             SetExpression(ec, Node.Ln(Parse(true)));
                         }
                         else
-                            throw new SyntaxException(mInput, mPos);
+                            throw new UnknownWordException(mInput, mPos);
                         break;
                     case 'p':
                     case 'P':
                         if (ConsumeWord("pi"))
                             SetExpression(ec, Node.PI());
                         else
-                            throw new SyntaxException(mInput, mPos);
+                            throw new UnknownWordException(mInput, mPos);
                         break;
                     case 's':
                     case 'S':
@@ -140,7 +140,7 @@ namespace Derivation.Parsing
                             SetExpression(ec, Node.Sqrt(Parse(true)));
                         }
                         else
-                            throw new SyntaxException(mInput, mPos);
+                            throw new UnknownWordException(mInput, mPos);
                         break;
                     default:
                         throw new UnknownTokenException(mInput, mPos);
