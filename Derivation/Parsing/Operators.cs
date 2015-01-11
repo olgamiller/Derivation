@@ -106,6 +106,9 @@ namespace Derivation.Parsing
 
         public Node Apply(Node l, Node r)
         {
+            if (r is NumberNode && ((NumberNode)r).Value == 0)
+                return r;
+
             return Node.Negate(r);
         }
     }
