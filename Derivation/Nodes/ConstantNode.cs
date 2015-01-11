@@ -29,6 +29,16 @@ namespace Derivation.Nodes
         {
             return mToken;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (GetType() == obj.GetType())
+                return true;
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode() { return base.GetHashCode(); }
     }
 
     public class ENode : ConstantNode

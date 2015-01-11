@@ -27,6 +27,16 @@ namespace Derivation.Nodes
         {
             return string.Format("{0}({1})", mToken, Node.ToString());
         }
+
+        public override bool Equals(object obj)
+        {
+            if (GetType() == obj.GetType() && Node.Equals(((FunctionNode)obj).Node))
+                return true;
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode() { return base.GetHashCode(); }
     }
 
     public class SinNode : FunctionNode

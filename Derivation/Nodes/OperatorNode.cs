@@ -30,6 +30,21 @@ namespace Derivation.Nodes
         {
             return string.Format("({0} {1} {2})", Left.ToString(), mToken, Right.ToString());
         }
+
+        public override bool Equals(object obj)
+        {
+            if (GetType() == obj.GetType())
+            {
+                BinaryNode node = (BinaryNode)obj;
+
+                if (Left.Equals(node.Left) && Right.Equals(node.Right))
+                    return true;
+            }
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode() { return base.GetHashCode(); }
     }
 
     public class NegateNode : Node
@@ -63,6 +78,16 @@ namespace Derivation.Nodes
         {
             return string.Format("(-{0})", Node.ToString());
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is NegateNode && Node.Equals(((NegateNode)obj).Node))
+                return true;
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode() { return base.GetHashCode(); }
     }
 
     public class AddNode : BinaryNode

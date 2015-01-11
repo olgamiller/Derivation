@@ -20,12 +20,12 @@ namespace Derivation.Nodes
         private int mPos;
 
         private ParameterNode()
-        {           
+        {
             if (mCount > 3)
                 mCount = 0;
 
-            mPos = mCount; 
-            
+            mPos = mCount;
+
             mCount++;
         }
 
@@ -64,5 +64,15 @@ namespace Derivation.Nodes
         {
             return mName;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ParameterNode && mName == ((ParameterNode)obj).mName)
+                return true;
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode() { return base.GetHashCode(); }
     }
 }

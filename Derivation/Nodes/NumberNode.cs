@@ -36,6 +36,16 @@ namespace Derivation.Nodes
             return Value.ToString();
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is NumberNode && Value == ((NumberNode)obj).Value)
+                return true;
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode() { return base.GetHashCode(); }
+
         internal Node Add(Node node)
         {
             return Number(Value + ((NumberNode)node).Value);
