@@ -234,21 +234,10 @@ namespace Derivation.Parsing
         {
             Node result = ec.GetResult();
 
-            if (result == null || !IfOperatorThenWithRightSide(result))
+            if (result == null)
                 throw new EmptyExpressionException(mInput, mPos);
 
             return result;
-        }
-
-        private bool IfOperatorThenWithRightSide(Node node)
-        {
-            if (node is BinaryNode)
-                return ((BinaryNode)node).Right != null;
-
-            if (node is NegateNode)
-                return ((NegateNode)node).Node != null;
-
-            return true;
         }
     }
 }
