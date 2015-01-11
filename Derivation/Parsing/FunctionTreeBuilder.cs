@@ -64,10 +64,20 @@ namespace Derivation.Parsing
         internal Node GetResult()
         {
             if (mOperator2 != null)
+            {
+                if (mExpression3 == null)
+                    return null;
+
                 ApplyOperator2(mExpression3);
+            }
 
             if (mOperator1 != null)
+            {
+                if (mExpression2 == null)
+                    return null;
+
                 ApplyOperator1(mExpression2);
+            }
 
             return mExpression1;
         }
