@@ -15,8 +15,8 @@ namespace Derivation.Nodes
     {
         protected string mToken;
 
-        public Node Left { get; private set; }
-        public Node Right { get; private set; }
+        public Node Left { get; protected set; }
+        public Node Right { get; protected set; }
 
         internal BinaryNode(Node l, Node r, string token)
         {
@@ -63,15 +63,20 @@ namespace Derivation.Nodes
 
         public override Node Derive(ParameterNode p)
         {
-            Node innerDerivation = Node.Derive(p);
+            return Negate(Node.Derive(p)).Reduce();
+        }
 
-            if (Is0(innerDerivation))
+        public override Node Reduce()
+        {
+            Node = Node.Reduce();
+
+            if (Is0(Node))
                 return Number(0.0);
 
-            if (innerDerivation is NumberNode)
-                return ((NumberNode)innerDerivation).Negate();
+            if (Node is NumberNode)
+                return ((NumberNode)Node).Negate();
 
-            return Negate(innerDerivation);
+            return this;
         }
 
         public override string ToString()
@@ -104,7 +109,27 @@ namespace Derivation.Nodes
 
         public override Node Derive(ParameterNode p)
         {
-            return ReduceAdd(Left.Derive(p), Right.Derive(p));
+            return Add(Left.Derive(p), Right.Derive(p)).Reduce();
+        }
+
+        public override Node Reduce()
+        {
+            Left = Left.Reduce();
+            Right = Right.Reduce();
+
+            if (Is0(Left) && Is0(Right))
+                return Number(0.0);
+
+            if (Is0(Left))
+                return Right;
+
+            if (Is0(Right))
+                return Left;
+
+            if (Left is NumberNode && Right is NumberNode)
+                return ((NumberNode)Left).Add(Right);
+
+            return this;
         }
     }
 
@@ -122,7 +147,30 @@ namespace Derivation.Nodes
 
         public override Node Derive(ParameterNode p)
         {
-            return ReduceSubtract(Left.Derive(p), Right.Derive(p));
+            return Subtract(Left.Derive(p), Right.Derive(p)).Reduce();
+        }
+
+        public override Node Reduce()
+        {
+            Left = Left.Reduce();
+            Right = Right.Reduce();
+
+            if (Is0(Left) && Is0(Right))
+                return Number(0.0);
+
+            if (Is0(Left))
+                return Negate(Right);
+
+            if (Is0(Right))
+                return Left;
+
+            if (Right is NegateNode)
+                return Add(Left, ((NegateNode)Right).Node).Reduce();
+
+            if (Left is NumberNode && Right is NumberNode)
+                return ((NumberNode)Left).Subtract(Right);
+
+            return this;
         }
     }
 
@@ -149,24 +197,44 @@ namespace Derivation.Nodes
                     BinaryNode n = (BinaryNode)derivationL;
 
                     if (n.Left is NumberNode)
-                        return ReduceMultiply(((NumberNode)n.Left).Divide(Right), n.Right);
+                        return Multiply(((NumberNode)n.Left).Divide(Right), n.Right).Reduce();
 
                     if (n.Right is NumberNode)
-                        return ReduceMultiply(((NumberNode)n.Right).Divide(Right), n.Left);
+                        return Multiply(((NumberNode)n.Right).Divide(Right), n.Left).Reduce();
                 }
 
-                return ReduceDivide(derivationL, Right);
+                return Divide(derivationL, Right).Reduce();
             }
             else
             {
-                Node l = ReduceMultiply(Left.Derive(p), Right);
-                Node r = ReduceMultiply(Left, Right.Derive(p));
+                Node l = Multiply(Left.Derive(p), Right);
+                Node r = Multiply(Left, Right.Derive(p));
 
-                Node dividend = ReduceSubtract(l, r);
-                Node divisor = ReducePower(Right, Number(2.0));
+                Node dividend = Subtract(l, r);
+                Node divisor = Power(Right, Number(2.0));
 
-                return ReduceDivide(dividend, divisor);
+                return Divide(dividend, divisor).Reduce();
             }
+        }
+
+        public override Node Reduce()
+        {
+            Left = Left.Reduce();
+            Right = Right.Reduce();
+
+            if (Is0(Left))
+                return Number(0.0);
+
+            if (Is1(Right))
+                return Left;
+
+            if (Left is NumberNode && Right is NumberNode)
+                return ((NumberNode)Left).Divide(Right);
+
+            if (Left.Equals(Right))
+                return Number(1);
+
+            return this;
         }
     }
 
@@ -184,10 +252,29 @@ namespace Derivation.Nodes
 
         public override Node Derive(ParameterNode p)
         {
-            Node l = ReduceMultiply(Left.Derive(p), Right);
-            Node r = ReduceMultiply(Left, Right.Derive(p));
+            Node l = Multiply(Left.Derive(p), Right);
+            Node r = Multiply(Left, Right.Derive(p));
+            return Add(l, r).Reduce();
+        }
 
-            return ReduceAdd(l, r);
+        public override Node Reduce()
+        {
+            Left = Left.Reduce();
+            Right = Right.Reduce();
+
+            if (Is0(Left) || Is0(Right))
+                return Number(0.0);
+
+            if (Is1(Left))
+                return Right;
+
+            if (Is1(Right))
+                return Left;
+
+            if (Left is NumberNode && Right is NumberNode)
+                return ((NumberNode)Left).Multiply(Right);
+
+            return this;
         }
     }
 
@@ -208,18 +295,38 @@ namespace Derivation.Nodes
             if (Right is NumberNode)
             {
                 Node exponent = ((NumberNode)Right).Subtract(Number(1.0));
-                Node power = ReducePower(Left, exponent);
-                return ReduceMultiply(ReduceMultiply(Right, power), Left.Derive(p));
+                Node power = Power(Left, exponent);
+                return Multiply(Multiply(Right, power), Left.Derive(p)).Reduce();
             }
             else
             {
-                Node fPowg = ReducePower(Left, Right);
+                Node fPowg = Power(Left, Right);
 
-                Node derfMulgDivf = ReduceMultiply(Left.Derive(p), ReduceDivide(Right, Left));
-                Node dergMullnf = ReduceMultiply(Right.Derive(p), Ln(Left));
+                Node derfMulgDivf = Multiply(Left.Derive(p), Divide(Right, Left));
+                Node dergMullnf = Multiply(Right.Derive(p), Ln(Left));
 
-                return ReduceMultiply(fPowg, ReduceAdd(derfMulgDivf, dergMullnf));
+                return Multiply(fPowg, Add(derfMulgDivf, dergMullnf)).Reduce();
             }
+        }
+
+        public override Node Reduce()
+        {
+            Left = Left.Reduce();
+            Right = Right.Reduce();
+
+            if (Is0(Right) || Is1(Left))
+                return Number(1.0);
+
+            if (Is0(Left))
+                return Number(0.0);
+
+            if (Is1(Right))
+                return Left;
+
+            if (Left is NumberNode && Right is NumberNode)
+                return ((NumberNode)Left).Power(Right);
+
+            return this;
         }
     }
 }

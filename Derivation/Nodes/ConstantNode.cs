@@ -25,6 +25,11 @@ namespace Derivation.Nodes
             return Number(0.0);
         }
 
+        public override Node Reduce()
+        {
+            return this;
+        }
+
         public override string ToString()
         {
             return mToken;

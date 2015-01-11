@@ -15,7 +15,7 @@ namespace Derivation.Nodes
     {
         private string mToken;
 
-        public Node Node { get; private set; }
+        public Node Node { get; protected set; }
 
         internal FunctionNode(Node node, string token)
         {
@@ -53,7 +53,17 @@ namespace Derivation.Nodes
 
         public override Node Derive(ParameterNode p)
         {
-            return ReduceMultiply(Cos(Node), Node.Derive(p));
+            return Multiply(Cos(Node), Node.Derive(p)).Reduce();
+        }
+
+        public override Node Reduce()
+        {
+            Node = Node.Reduce();
+
+            if (Node is PiNode)
+                return Number(0);
+
+            return this;
         }
     }
 
@@ -71,7 +81,17 @@ namespace Derivation.Nodes
 
         public override Node Derive(ParameterNode p)
         {
-            return ReduceMultiply(Negate(Sin(Node)), Node.Derive(p));
+            return Multiply(Negate(Sin(Node)), Node.Derive(p)).Reduce();
+        }
+
+        public override Node Reduce()
+        {
+            Node = Node.Reduce();
+
+            if (Node is PiNode)
+                return Number(-1);
+
+            return this;
         }
     }
 
@@ -89,10 +109,16 @@ namespace Derivation.Nodes
 
         public override Node Derive(ParameterNode p)
         {
-            Node tmp = Multiply(Number(2.0), Sqrt(Node));
-            Node sqrtDerivation = Divide(Number(1.0), tmp);
+            Node tmp = Multiply(Number(2), Sqrt(Node));
+            Node sqrtDerivation = Divide(Number(1), tmp);
 
-            return ReduceMultiply(sqrtDerivation, Node.Derive(p));
+            return Multiply(sqrtDerivation, Node.Derive(p)).Reduce();
+        }
+
+        public override Node Reduce()
+        {
+            Node = Node.Reduce();
+            return this;
         }
     }
 
@@ -110,7 +136,13 @@ namespace Derivation.Nodes
 
         public override Node Derive(ParameterNode p)
         {
-            return ReduceDivide(Node.Derive(p), Node);
+            return Divide(Node.Derive(p), Node).Reduce();
+        }
+
+        public override Node Reduce()
+        {
+            Node = Node.Reduce();
+            return this;
         }
     }
 
@@ -128,7 +160,13 @@ namespace Derivation.Nodes
 
         public override Node Derive(ParameterNode p)
         {
-            return ReduceMultiply(Exp(Node), Node.Derive(p));
+            return Multiply(this, Node.Derive(p)).Reduce();
+        }
+
+        public override Node Reduce()
+        {
+            Node = Node.Reduce();
+            return this;
         }
     }
 }

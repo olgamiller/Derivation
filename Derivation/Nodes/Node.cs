@@ -16,6 +16,7 @@ namespace Derivation.Nodes
         public T Apply<T>(IMath<T> m, T x) { return Apply(m, x, x, x, x); }
         public abstract T Apply<T>(IMath<T> m, T x, T y, T z, T t);
         public abstract Node Derive(ParameterNode p);
+        public abstract Node Reduce();
 
         #region Operator Nodes
 
@@ -54,7 +55,7 @@ namespace Derivation.Nodes
 
         #endregion
 
-        #region Reduce
+        #region Reduce Help Functions
 
         protected static bool Is0(Node node)
         {
@@ -70,88 +71,6 @@ namespace Derivation.Nodes
                 return ((NumberNode)node).Value == 1.0;
 
             return false;
-        }
-
-        protected static Node ReduceMultiply(Node l, Node r)
-        {
-            if (Is0(l) || Is0(r))
-                return Number(0.0);
-
-            if (Is1(l))
-                return r;
-
-            if (Is1(r))
-                return l;
-
-            if (l is NumberNode && r is NumberNode)
-                return ((NumberNode)l).Multiply(r);
-
-            return Multiply(l, r);
-        }
-
-        protected static Node ReduceAdd(Node l, Node r)
-        {
-            if (Is0(l) && Is0(r))
-                return Number(0.0);
-
-            if (Is0(l))
-                return r;
-
-            if (Is0(r))
-                return l;
-
-            if (l is NumberNode && r is NumberNode)
-                return ((NumberNode)l).Add(r);
-
-            return Add(l, r);
-        }
-
-        protected static Node ReduceSubtract(Node l, Node r)
-        {
-            if (Is0(l) && Is0(r))
-                return Number(0.0);
-
-            if (Is0(l))
-                return Negate(r);
-
-            if (Is0(r))
-                return l;
-
-            if (l is NumberNode && r is NumberNode)
-                return ((NumberNode)l).Subtract(r);
-
-            return Subtract(l, r);
-        }
-
-        protected static Node ReducePower(Node l, Node r)
-        {
-            if (Is0(r) || Is1(l))
-                return Number(1.0);
-
-            if (Is0(l))
-                return Number(0.0);
-
-            if (Is1(r))
-                return l;
-
-            if (l is NumberNode && r is NumberNode)
-                return ((NumberNode)l).Power(r);
-
-            return Power(l, r);
-        }
-
-        protected static Node ReduceDivide(Node l, Node r)
-        {
-            if (Is0(l))
-                return Number(0.0);
-
-            if (Is1(r))
-                return l;
-
-            if (l is NumberNode && r is NumberNode)
-                return ((NumberNode)l).Divide(r);
-
-            return Divide(l, r);
         }
 
         #endregion
